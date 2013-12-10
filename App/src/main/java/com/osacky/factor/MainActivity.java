@@ -3,6 +3,7 @@ package com.osacky.factor;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,9 +11,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.parse.FindCallback;
 import com.parse.Parse;
 import com.parse.ParseAnalytics;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
+import java.util.List;
 
 
 public class MainActivity extends Activity {
@@ -30,18 +36,41 @@ public class MainActivity extends Activity {
 
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v){
-                ParseObject blah = new ParseObject("TheNumber");
-                blah.put("number", (Math.random()+.2)*100000);
-                blah.put("threads", 4);
-                blah.saveInBackground();
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("TheNumber");
+                query.whereGreaterThan("threads", 0);
+                query.findInBackground(new FindCallback<ParseObject>() {
+                    public void done(List<ParseObject> primeList, ParseException e) {
+                        if (e == null) {
+                            Log.d("score", "Retrieved " + primeList.size() + " scores");
+                        } else {
+                            Log.d("score", "Error: " + e.getMessage());
+                        }
+                        //IsPrime isPrime = new IsPrime();
+                        if(primeList.isEmpty())
+                        {
+                            int primeNumber = (int)((Math.random()+.2)*100000);
+                            ParseObject blah = new ParseObject("TheNumber");
+                            blah.put("number", primeNumber);
+                            blah.put("threads", 3);
+                            blah.saveInBackground();
+                            IsPrime.isPrime(primeNumber, 2, (int)Math.sqrt(primeNumber/4));
+                        }
+                        else
+                        {
+                            int primeNumber = primeList.get(0).getInt("number");
+                            int threads = 4-primeList.get(0).getInt("threads");
+                            primeList.get(0).increment("threads", -1);
+                            IsPrime.isPrime(primeNumber, (int)Math.sqrt(primeNumber)*threads/4, (int)Math.sqrt(primeNumber)*(threads+1)/4);
+                            primeList.get(0).saveInBackground();
+                            if(primeList.get(0).getInt("threads")==0)
+                            {
+                                primeList.get(0).deleteInBackground();
+                            }
+                        }
+                    }
+                });
             }
         });
-
-//        if (savedInstanceState == null) {
-//            getFragmentManager().beginTransaction()
-//                    .add(R.id.fragment_main, new PlaceholderFragment())
-//                    .commit();
-//        }
     }
 
 
