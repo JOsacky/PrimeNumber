@@ -6,10 +6,11 @@
     <string name="time_taken">Total Time: </string>
     <string name="num_proc">Numbers Processed: </string>
     <string name="factor">First Factor Found: </string>
-    <string name="button_text">Start Computing</string>
+    <string name="button_compute">Start Computing</string>
     <string name="action_settings">Settings</string>
+    <string name="button_create">Create</string>
 
-    <color name="green">#00FF00</color>
+    <color name="green">#009933</color>
 
     <string name="title_activity_computing">Computing</string>
 

@@ -1,7 +1,9 @@
 package com.osacky.factor;
+
 import android.util.Log;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Jonathan on 12/6/13.

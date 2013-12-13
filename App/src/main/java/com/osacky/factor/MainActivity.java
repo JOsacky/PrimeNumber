@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.parse.FindCallback;
@@ -19,6 +20,7 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -57,12 +59,13 @@ public class MainActivity extends Activity {
                         //IsPrime isPrime = new IsPrime();
                         if(primeList.isEmpty())
                         {
-                            int primeNumber = (int)((Math.random()+.2)*100000);
+                            //int primeNumber = (int)((Math.random()+.2)*100000);
+                            int primeNumber = 179424691;
                             ParseObject blah = new ParseObject("TheNumber");
                             blah.put("number", primeNumber);
                             blah.put("threads", 3);
                             blah.saveInBackground();
-                            IsPrime.isPrime(primeNumber, 2, (int)Math.sqrt(primeNumber/4));
+                            isPrime(primeNumber, 2, (int) Math.sqrt(primeNumber / 4));
                         }
                         else
                         {
@@ -70,7 +73,7 @@ public class MainActivity extends Activity {
                             int threads = 4-primeList.get(0).getInt("threads");
                             primeList.get(0).increment("threads", -1);
                             int primeSqrt = (int)Math.sqrt(primeNumber);
-                            IsPrime.isPrime(primeNumber, primeSqrt*threads/4, primeSqrt*(threads+1)/4);
+                            isPrime(primeNumber, primeSqrt * threads / 4, primeSqrt * (threads + 1) / 4);
                             primeList.get(0).saveInBackground();
                             if(primeList.get(0).getInt("threads")<=0)
                             {
@@ -84,6 +87,45 @@ public class MainActivity extends Activity {
                 });
             }
         });
+    }
+
+    public List isPrime(int num, int lo, int hi)
+    {
+        List toRet = new ArrayList();
+        final ProgressBar mProgress;
+        mProgress = (ProgressBar) findViewById(R.id.progressBar);
+        mProgress.setProgress(0);
+        if(lo==2 && num%2==0)
+        {
+            toRet.add(2);
+            toRet.add(num>>1);
+            Log.e("prime number:", "2");
+            Log.e("prime number:", ""+ (num/2));
+
+        }
+
+        if(lo%2==0)
+            lo = lo+1;
+
+        long onePercent = (hi-lo)/100;
+        Log.e("hi: ", "" + hi);
+        Log.e("lo: ", "" + lo);
+        Log.e("oneP: ", "" + onePercent);
+
+        for(int i=lo; i<=hi; i+=2)
+        {
+            if(i%onePercent==0)
+                mProgress.incrementProgressBy(1);
+            if(num%i == 0)
+            {
+                toRet.add(i);
+                Log.e("prime number:",""+ i);
+                toRet.add(num/i);
+                Log.e("prime number:",""+ (num/i));
+            }
+        }
+        mProgress.setProgress(100);
+        return toRet;
     }
 
 
