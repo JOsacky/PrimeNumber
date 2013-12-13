@@ -8,6 +8,9 @@
     <string name="factor">First Factor Found: </string>
     <string name="button_text">Start Computing</string>
     <string name="action_settings">Settings</string>
+    <string name="parse_object">Computations</string>
+    <string name="parse_object_prime">prime_number</string>
+    <string name="parse_object_threads">threads</string>
 
     <color name="green">#00FF00</color>
 
