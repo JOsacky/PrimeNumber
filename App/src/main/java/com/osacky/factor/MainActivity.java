@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -36,95 +37,102 @@ public class MainActivity extends Activity {
         Parse.initialize(this, "7A5hnUGC6Zxg6OQhZjWnB2gHAYc7h2VOOxYcVlMg", "L6tf0XRvzq6xSqbmf8EkMzJxqIfMMUqP5J9pljMC");
         ParseAnalytics.trackAppOpened(getIntent());
 
-        Button button = (Button) findViewById(R.id.button);
-        final TextView textTime = (TextView) findViewById(R.id.textTime);
-        final TextView textProcessed = (TextView)findViewById(R.id.textNumbersProcessed);
-        final TextView textFactorFound = (TextView)findViewById(R.id.textFactorFound);
+        Button button = (Button) findViewById(R.id.compute);
+        Button button_create = (Button) findViewById(R.id.create);
+        final EditText threads = (EditText)findViewById(R.id.textThreads);
+        final EditText number = (EditText)findViewById(R.id.textNumber);
+
+        button_create.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                threads.getText();
+                buttonParse(Integer.parseInt(threads.getText().toString()), Long.parseLong(number.getText().toString()), true);
+            }
+        });
 
         button.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v)
             {
-                ParseQuery<ParseObject> query = ParseQuery.getQuery(getString(R.string.parse_object));
-                query.whereGreaterThan(getString(R.string.parse_object_threads), 0);
-                query.findInBackground(new FindCallback<ParseObject>()
-                {
-                    public void done(List<ParseObject> primeList, ParseException e)
-                    {
-                        long prime_num;
-                        long prime_sqrt;
-
-                        Calendar t1 = Calendar.getInstance();
-                        long time1 = t1.getTimeInMillis();
-                        Log.d("time1", "" + time1);
-
-                        if(e!=null)
-                        {
-                            Log.d("Error", "Error: " + e.getMessage());
-                        }
-
-                        //IsPrime isPrime = new IsPrime();
-                        if(primeList.isEmpty())
-                        {
-<<<<<<< HEAD
-                            //int primeNumber = (int)((Math.random()+.2)*100000);
-                            int primeNumber = 179424691;
-                            ParseObject blah = new ParseObject("TheNumber");
-                            blah.put("number", primeNumber);
-                            blah.put("threads", 3);
-                            blah.saveInBackground();
-                            isPrime(primeNumber, 2, (int) Math.sqrt(primeNumber / 4));
-                        }
-                        else
-                        {
-                            int primeNumber = primeList.get(0).getInt("number");
-                            int threads = 4-primeList.get(0).getInt("threads");
-                            primeList.get(0).increment("threads", -1);
-                            int primeSqrt = (int)Math.sqrt(primeNumber);
-                            isPrime(primeNumber, primeSqrt * threads / 4, primeSqrt * (threads + 1) / 4);
-=======
-                            prime_num = (long)((Math.random()+.2)*100000);
-                            prime_sqrt = (long) Math.ceil(Math.sqrt(prime_num));
-
-                            ParseObject create = new ParseObject(getString(R.string.parse_object));
-                            create.put(getString(R.string.parse_object_prime), prime_num);
-                            create.put(getString(R.string.parse_object_threads), 3);
-                            create.saveInBackground();
-
-                            IsPrime.isPrime(prime_num, 2, prime_sqrt);
-                        }
-                        else
-                        {
-                            primeList.get(0).increment(getString(R.string.parse_object_threads), -1);
-
-                            prime_num = primeList.get(0).getLong(getString(R.string.parse_object_prime));
-                            prime_sqrt = (long) Math.ceil(Math.sqrt(prime_num));
-
-                            int threads = 4-primeList.get(0).getInt(getString(R.string.parse_object_threads));
-
-                            IsPrime.isPrime(prime_num, prime_sqrt*threads/4, prime_sqrt*(threads+1)/4);
->>>>>>> a0efd74695d8c8d4bae41fae9a6a2b80c0fb6060
-                            primeList.get(0).saveInBackground();
-                            if(primeList.get(0).getInt(getString(R.string.parse_object_threads))<=0)
-                            {
-                                primeList.get(0).deleteInBackground();
-                            }
-                        }
-                        Calendar t2 = Calendar.getInstance();
-                        long time2 = t2.getTimeInMillis();
-                        textTime.setText("Total Time: " + (time2-time1));
-                    }
-                });
+                buttonParse(0, 0, false);
             }
         });
     }
 
-    public List isPrime(int num, int lo, int hi)
+    public void buttonParse(final int thread, final long num, final boolean shouldCreate)
+    {
+        final TextView textTime = (TextView) findViewById(R.id.textTime);
+        TextView textProcessed = (TextView)findViewById(R.id.textNumbersProcessed);
+        final TextView textFactorFound = (TextView)findViewById(R.id.textFactorFound);
+        ParseQuery<ParseObject> query = ParseQuery.getQuery(getString(R.string.parse_object));
+        query.whereGreaterThan(getString(R.string.parse_object_threads), 0);
+        query.findInBackground(new FindCallback<ParseObject>()
+        {
+            public void done(List<ParseObject> primeList, ParseException e)
+            {
+                long prime_num;
+                long prime_sqrt;
+
+                Calendar t1 = Calendar.getInstance();
+                long time1 = t1.getTimeInMillis();
+                Log.d("time1", "" + time1);
+
+                if(e!=null)
+                {
+                    Log.d("Error", "Error: " + e.getMessage());
+                }
+
+                //IsPrime isPrime = new IsPrime();
+                if(primeList.isEmpty())
+                {
+                    if(!shouldCreate)
+                        prime_num = (long)((Math.random()+.2)*100000);
+                    else
+                        prime_num = num;
+                    prime_sqrt = (long) Math.ceil(Math.sqrt(prime_num));
+
+                    ParseObject create = new ParseObject(getString(R.string.parse_object));
+                    create.put(getString(R.string.parse_object_prime), prime_num);
+                    create.put(getString(R.string.parse_object_threads), 3);
+                    create.saveInBackground();
+
+                    IsPrime.isPrime(prime_num, 2, prime_sqrt);
+                }
+                else
+                {
+                    int numThreads;
+                    if(shouldCreate)
+                        numThreads = thread;
+                    else
+                        numThreads = 4;
+                    primeList.get(0).increment(getString(R.string.parse_object_threads), -1);
+
+                    prime_num = primeList.get(0).getLong(getString(R.string.parse_object_prime));
+                    prime_sqrt = (long) Math.ceil(Math.sqrt(prime_num));
+
+                    int threads = numThreads-primeList.get(0).getInt(getString(R.string.parse_object_threads));
+
+                    IsPrime.isPrime(prime_num, prime_sqrt * threads / numThreads, prime_sqrt * (threads + 1) / numThreads);
+
+                    primeList.get(0).saveInBackground();
+                    if(primeList.get(0).getInt(getString(R.string.parse_object_threads))<=0)
+                    {
+                        primeList.get(0).deleteInBackground();
+                    }
+                }
+                Calendar t2 = Calendar.getInstance();
+                long time2 = t2.getTimeInMillis();
+                textTime.setText("Total Time: " + (time2-time1));
+            }
+        });
+    }
+
+    public List isPrime(long num, long lo, long hi)
     {
         List toRet = new ArrayList();
         final ProgressBar mProgress;
         mProgress = (ProgressBar) findViewById(R.id.progressBar);
         mProgress.setProgress(0);
+
         if(lo==2 && num%2==0)
         {
             toRet.add(2);
@@ -142,16 +150,17 @@ public class MainActivity extends Activity {
         Log.e("lo: ", "" + lo);
         Log.e("oneP: ", "" + onePercent);
 
-        for(int i=lo; i<=hi; i+=2)
+        for(long i=lo; i<=hi; i+=2)
         {
             if(i%onePercent==0)
                 mProgress.incrementProgressBy(1);
             if(num%i == 0)
             {
                 toRet.add(i);
-                Log.e("prime number:",""+ i);
                 toRet.add(num/i);
-                Log.e("prime number:",""+ (num/i));
+                Log.d("prime number:",""+ i);
+                Log.d("prime number:",""+ (num/i));
+
             }
         }
         mProgress.setProgress(100);

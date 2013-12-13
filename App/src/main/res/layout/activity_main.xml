@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:inputType="number"
         android:ems="10"
-        android:id="@+id/editText"
+        android:id="@+id/textThreads"
         android:layout_gravity="center_horizontal"
         android:hint="Number of Threads"
         android:layout_weight="1"/>
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:inputType="number"
         android:ems="10"
-        android:id="@+id/editText2"
+        android:id="@+id/textNumber"
         android:layout_gravity="center_horizontal"
         android:hint="Number to Compute"
         android:layout_weight="1"/>
@@ -41,7 +41,7 @@
         android:background="@color/green"
         android:text="@string/button_create" />
     <Button
-        android:id="@+id/button"
+        android:id="@+id/compute"
         android:layout_width="200dp"
         android:layout_gravity="center"
         android:layout_height="wrap_content"
