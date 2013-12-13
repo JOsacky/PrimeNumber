@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class IsPrime {
 
-    public static List isPrime(int num, int lo, int hi)
+    public static List isPrime(long num, long lo, long hi)
     {
         List toRet = new ArrayList();
 
@@ -26,14 +26,14 @@ public class IsPrime {
         if(lo%2==0)
             lo = lo+1;
 
-        for(int i=lo; i<=hi; i+=2)
+        for(long i=lo; i<=hi; i+=2)
         {
             if(num%i == 0)
             {
                 toRet.add(i);
-                Log.e("prime number:",""+ i);
                 toRet.add(num/i);
-                Log.e("prime number:",""+ (num/i));
+                Log.d("prime number:",""+ i);
+                Log.d("prime number:",""+ (num/i));
 
             }
         }
