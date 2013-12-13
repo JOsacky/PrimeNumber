@@ -32,7 +32,7 @@
         android:layout_gravity="center"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/time_taken"
-        android:id="@+id/textView"
+        android:id="@+id/textTime"
         android:layout_marginTop="30dp"
         android:layout_above="@+id/textView2"
         android:layout_centerHorizontal="true"/>
@@ -42,7 +42,7 @@
         android:layout_gravity="center"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/num_proc"
-        android:id="@+id/textView2"
+        android:id="@+id/textNumbersProcessed"
         android:layout_above="@+id/textView3"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"/>
@@ -52,7 +52,7 @@
         android:layout_gravity="center"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/factor"
-        android:id="@+id/textView3"
+        android:id="@+id/textFactorFound"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"/>

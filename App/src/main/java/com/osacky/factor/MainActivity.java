@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.parse.FindCallback;
 import com.parse.Parse;
@@ -18,6 +19,7 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -33,11 +35,18 @@ public class MainActivity extends Activity {
         ParseAnalytics.trackAppOpened(getIntent());
 
         Button button = (Button) findViewById(R.id.button);
+        final TextView textTime = (TextView) findViewById(R.id.textTime);
+        final TextView textProcessed = (TextView)findViewById(R.id.textNumbersProcessed);
+        final TextView textFactorFound = (TextView)findViewById(R.id.textFactorFound);
 
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v){
+                final Calendar t1 = Calendar.getInstance();
+                final long time1 = t1.getTimeInMillis();
+                Log.e("time1", "" + time1);
                 ParseQuery<ParseObject> query = ParseQuery.getQuery("TheNumber");
                 query.whereGreaterThan("threads", 0);
+                int primeNumber;
                 query.findInBackground(new FindCallback<ParseObject>() {
                     public void done(List<ParseObject> primeList, ParseException e) {
                         if (e == null) {
@@ -60,13 +69,17 @@ public class MainActivity extends Activity {
                             int primeNumber = primeList.get(0).getInt("number");
                             int threads = 4-primeList.get(0).getInt("threads");
                             primeList.get(0).increment("threads", -1);
-                            IsPrime.isPrime(primeNumber, (int)Math.sqrt(primeNumber)*threads/4, (int)Math.sqrt(primeNumber)*(threads+1)/4);
+                            int primeSqrt = (int)Math.sqrt(primeNumber);
+                            IsPrime.isPrime(primeNumber, primeSqrt*threads/4, primeSqrt*(threads+1)/4);
                             primeList.get(0).saveInBackground();
-                            if(primeList.get(0).getInt("threads")==0)
+                            if(primeList.get(0).getInt("threads")<=0)
                             {
                                 primeList.get(0).deleteInBackground();
                             }
                         }
+                        Calendar t2 = Calendar.getInstance();
+                        long time2 = t2.getTimeInMillis();
+                        textTime.setText("Total Time: " + (time2-time1));
                     }
                 });
             }
