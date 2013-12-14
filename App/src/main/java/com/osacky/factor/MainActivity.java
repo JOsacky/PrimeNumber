@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parse.Parse;
 import com.parse.ParseAnalytics;
@@ -24,8 +25,11 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Objects;
 
 
 public class MainActivity extends Activity {
@@ -103,7 +107,7 @@ public class MainActivity extends Activity {
         ParseQuery<ParseObject> query = ParseQuery.getQuery(getString(R.string.parse_object));
         query.whereGreaterThan(getString(R.string.parse_object_rem_threads), 0);
         ParseObject computation = null;
-        
+
         try
         {
             computation = query.getFirst();
@@ -136,74 +140,61 @@ public class MainActivity extends Activity {
             mServiceIntent.putExtra(getString(R.string.parse_object_threads), num_threads);
             mServiceIntent.putExtra(getString(R.string.parse_object_sqrt), sqrt);
             this.startService(mServiceIntent);
-
-//            sqrt = number;
-
-//            Calendar t1 = Calendar.getInstance();
-//            long time1 = t1.getTimeInMillis();
-//            Log.e("time1", "" + time1);
-//
-//            double low = (double) (diff_threads-1) / (double) num_threads;
-//            double high = (double) diff_threads / (double) num_threads;
-//
-//            return_factors(number, (long) (sqrt*low), (long) (sqrt*high));
-//
-//            Calendar t2 = Calendar.getInstance();
-//            long time2 = t2.getTimeInMillis();
-//            textTime.setText("Total Time: " + (time2 - time1));
-//
-//            if (computation.getLong(getString(R.string.parse_object_rem_threads)) <= 0)
-//            {
-//                computation.deleteInBackground();
-//            }
         }
     }
 
+    public void show_results(View v) {
+        EditText number_text = (EditText) findViewById(R.id.textNumber);
+        long number = Long.parseLong(number_text.getText().toString());
 
-//    public List return_factors(long number, long low, long high)
-//    {
-//        List toRet = new ArrayList();
-//
-//        ProgressBar mProgress;
-//        mProgress = (ProgressBar) findViewById(R.id.progressBar);
-//        mProgress.setProgress(0);
-//
-//        if(low==0 && number%2==0)
-//        {
-//            toRet.add(2);
-//            toRet.add(number>>1);
-//            low=2;
-////            Log.e("prime number:", "2");
-////            Log.e("prime number:", ""+ (num/2));
-//        }
-//
-//        if(low%2==0)
-//            low = low+1;
-//
-//        long onePercent = (high-low)/100;
-//        Log.e("hi: ", "" + high);
-//        Log.e("lo: ", "" + low);
-//        Log.e("oneP: ", "" + onePercent);
-//
-//        for(long i=low; i<=high; i+=2)
-//        {
-//            if(i%onePercent==0)
-//                mProgress.incrementProgressBy(1);
-//
-//            if(number%i == 0)
-//            {
-//                toRet.add(i);
-//                toRet.add(number / i);
-////                Log.d("prime number:", "" + i);
-////                Log.d("prime number:", "" + (num / i));
-//
-//            }
-//        }
-//        mProgress.setProgress(100);
-//        return toRet;
-//    }
+        ParseQuery<ParseObject> query = ParseQuery.getQuery(getString(R.string.parse_object));
+        query.whereEqualTo(getString(R.string.parse_object_rem_threads), 0);
+        query.whereEqualTo(getString(R.string.parse_object_number), number);
+        try
+        {
+            if(query.getFirst()==null)
+            {
+                Toast toast = Toast.makeText(getApplicationContext(), "No results yet.", 4);
+                toast.show();
+                return;
+            }
+        }
+        catch (ParseException e)
+        {
+            e.printStackTrace();
+        }
 
+        query = ParseQuery.getQuery(getString(R.string.parse_factors));
+        query.whereEqualTo(getString(R.string.parse_factors_key), number);
 
+        List<ParseObject> objects = null;
+        try
+        {
+            objects = query.find();
+        }
+        catch (ParseException e)
+        {
+            e.printStackTrace();
+        }
+
+        ArrayList<Long> factors = new ArrayList<Long>();
+        for(ParseObject obj: objects)
+        {
+            ArrayList<Long> obj_factors = (ArrayList<Long>) obj.get(getString(R.string.parse_factors_value));
+            for(long num: obj_factors)
+            {
+                if(!factors.contains(num))
+                    factors.add(num);
+            }
+        }
+        Object[] arr = factors.toArray();
+        Arrays.sort(arr);
+        ArrayList array = new ArrayList(Arrays.asList(arr));
+
+        Intent intent = new Intent(this, ShowResultsActivity.class);
+        intent.putExtra(getString(R.string.parse_factors), array);
+        startActivity(intent);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
