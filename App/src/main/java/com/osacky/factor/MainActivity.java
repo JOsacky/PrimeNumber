@@ -2,7 +2,6 @@ package com.osacky.factor;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parse.Parse;
 import com.parse.ParseAnalytics;
@@ -64,14 +64,41 @@ public class MainActivity extends Activity {
         EditText thread_text = (EditText) findViewById(R.id.textThreads);
         EditText number_text = (EditText) findViewById(R.id.textNumber);
 
-        long num_threads = Long.parseLong(thread_text.getText().toString());
-        long number = Long.parseLong(number_text.getText().toString());
+        //long num_threads = Long.parseLong(thread_text.getText().toString());
+        //long number = Long.parseLong(number_text.getText().toString());
 
-        ParseObject create = new ParseObject(getString(R.string.parse_object));
-        create.put(getString(R.string.parse_object_number), number);
-        create.put(getString(R.string.parse_object_threads), num_threads);
-        create.put(getString(R.string.parse_object_rem_threads), num_threads);
-        create.saveInBackground();
+        if(thread_text.getText().toString().length() <=0 /*|| num_threads == 0 */)
+        {
+            Toast toast = Toast.makeText(getApplicationContext(), "please enter a number >= 0", 4);
+            toast.show();
+        }
+        else if(number_text.getText().toString().length() <=0 /*|| number < 2*/ )
+        {
+            Toast toast = Toast.makeText(getApplicationContext(), "please enter a prime number >= 2", 4);
+            toast.show();
+        }
+        else{
+            long num_threads = Long.parseLong(thread_text.getText().toString());
+            long number = Long.parseLong(number_text.getText().toString());
+            if(num_threads==0)
+            {
+                Toast toast = Toast.makeText(getApplicationContext(), "please enter a prime number > 0", 4);
+                toast.show();
+            }
+            else if(number <2)
+            {
+                Toast toast = Toast.makeText(getApplicationContext(), "please enter a number >= 2", 4);
+                toast.show();
+            }
+            else
+            {
+                ParseObject create = new ParseObject(getString(R.string.parse_object));
+                create.put(getString(R.string.parse_object_number), number);
+                create.put(getString(R.string.parse_object_threads), num_threads);
+                create.put(getString(R.string.parse_object_rem_threads), num_threads);
+                create.saveInBackground();
+            }
+        }
     }
 
     public void perform_computation(View v)
@@ -136,7 +163,7 @@ public class MainActivity extends Activity {
 
         ProgressBar mProgress;
         mProgress = (ProgressBar) findViewById(R.id.progressBar);
-        mProgress.setProgress(0);
+        //mProgress.setProgress(0);
 
         if(low==0 && number%2==0)
         {
@@ -169,7 +196,7 @@ public class MainActivity extends Activity {
 
             }
         }
-        mProgress.setProgress(100);
+        //mProgress.setProgress(100);
         return toRet;
     }
 
