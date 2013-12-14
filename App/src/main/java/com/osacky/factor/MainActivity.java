@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,8 +25,7 @@ import com.parse.ParseAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-
-import java.util.List;
+import com.parse.ParseQueryAdapter;
 
 
 
@@ -139,6 +139,8 @@ public class MainActivity extends Activity {
 
     public void perform_computation(View v)
     {
+        EditText thread_text = (EditText) findViewById(R.id.textThreads);
+        EditText number_text = (EditText) findViewById(R.id.textNumber);
         Button button = (Button) findViewById(R.id.compute);
         button.setBackgroundColor(getResources().getColor(R.color.red));
         ProgressBar mProgress = (ProgressBar) findViewById(R.id.progressBar);
@@ -186,6 +188,8 @@ public class MainActivity extends Activity {
             rem_threads = computation.getLong(getString(R.string.parse_object_rem_threads));
             sqrt = computation.getLong(getString(R.string.parse_object_sqrt));
             diff_threads = num_threads - rem_threads;
+            thread_text.setText("" + num_threads);
+            number_text.setText("" + number);
 
             Intent mServiceIntent = new Intent(this, ComputationService.class);
             mServiceIntent.putExtra(getString(R.string.parse_object_number), number);
@@ -198,55 +202,41 @@ public class MainActivity extends Activity {
 
     public void show_results(View v) {
         EditText number_text = (EditText) findViewById(R.id.textNumber);
-        long number = Long.parseLong(number_text.getText().toString());
+        final long number = Long.parseLong(number_text.getText().toString());
+//        Intent mServiceIntent = new Intent(this, ShowResultsActivity.class);
+//        mServiceIntent.putExtra("prime_number", number);
+//        this.startService(mServiceIntent);
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery(getString(R.string.parse_object));
-        query.whereEqualTo(getString(R.string.parse_object_rem_threads), 0);
-        query.whereEqualTo(getString(R.string.parse_object_number), number);
-        try
-        {
-            if(query.getFirst()==null)
-            {
-                Toast toast = Toast.makeText(getApplicationContext(), "No results yet.", 4);
-                toast.show();
-                return;
-            }
-        }
-        catch (ParseException e)
-        {
-            e.printStackTrace();
-        }
+        // Instantiate a QueryFactory to define the ParseQuery to be used for fetching items in this
+        // Adapter.
+        ParseQueryAdapter.QueryFactory<ParseObject> factory =
+                new ParseQueryAdapter.QueryFactory<ParseObject>() {
+                    public ParseQuery create() {
+                        ParseQuery query = new ParseQuery("Factors");
+                        query.whereEqualTo("prime_number", number);
+                        query.orderByAscending("factor");
+                        return query;
+                    }
+                };
 
-        query = ParseQuery.getQuery(getString(R.string.parse_factors));
-        query.whereEqualTo(getString(R.string.parse_factors_key), number);
+        // Pass the factory into the ParseQueryAdapter's constructor.
+        ParseQueryAdapter<ParseObject> adapter = new ParseQueryAdapter<ParseObject>(this, factory);
+        adapter.setTextKey("factor");
 
-        List<ParseObject> objects = null;
-        try
-        {
-            objects = query.find();
-        }
-        catch (ParseException e)
-        {
-            e.printStackTrace();
-        }
-
-//        ArrayList<Long> factors = new ArrayList<Long>();
-//        for(ParseObject obj: objects)
-//        {
-//            ArrayList<Long> obj_factors = (ArrayList<Long>) obj.get(getString(R.string.parse_factors_value));
-//            for(long num: obj_factors)
-//            {
-//                if(!factors.contains(num))
-//                    factors.add(num);
+        // Perhaps set a callback to be fired upon successful loading of a new set of ParseObjects.
+//        adapter.addOnQueryLoadListener(new OnQueryLoadListener<ParseObject>() {
+//            public void onLoading() {
+//                // Trigger any "loading" UI
 //            }
-//        }
-//        Object[] arr = factors.toArray();
-//        Arrays.sort(arr);
-//        ArrayList array = new ArrayList(Arrays.asList(arr));
 //
-//        Intent intent = new Intent(this, ShowResultsActivity.class);
-//        intent.putExtra(getString(R.string.parse_factors), array);
-//        startActivity(intent);
+//            public void onLoaded(List<ParseObject> objects, ParseException e) {
+//                // Execute any post-loading logic, hide "loading" UI
+//            }
+//        });
+
+        // Attach it to your ListView, as in the example above
+        ListView listView = (ListView) findViewById(R.id.listview);
+        listView.setAdapter(adapter);
     }
 
     @Override

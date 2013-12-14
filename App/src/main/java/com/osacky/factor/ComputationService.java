@@ -62,9 +62,12 @@ public class ComputationService extends IntentService
                 toRet.add(number/2);
                 ParseObject create = new ParseObject("Factors");
                 create.put("prime_number", number);
-                create.put("factor1", low);
-                create.put("factor2", number/2);
+                create.put("factor", low);
                 create.saveInBackground();
+                ParseObject create2 = new ParseObject("Factors");
+                create2.put("prime_number", number);
+                create2.put("factor", number/2);
+                create2.saveInBackground();
                 Log.e("Factor:", "2");
                 Log.e("Factor:", ""+ (number/2));
             }
@@ -96,13 +99,17 @@ public class ComputationService extends IntentService
 
             if(number%i == 0)
             {
+
                 toRet.add(i);
                 toRet.add(number / i);
                 ParseObject create = new ParseObject("Factors");
                 create.put("prime_number", number);
-                create.put("factor1", i);
-                create.put("factor2", number/i);
+                create.put("factor", i);
                 create.saveInBackground();
+                ParseObject create2 = new ParseObject("Factors");
+                create2.put("prime_number", number);
+                create2.put("factor", number/i);
+                create2.saveInBackground();
                 Log.e("Factor:", "" + i);
                 Log.e("Factor:", "" + (number/i));
             }
