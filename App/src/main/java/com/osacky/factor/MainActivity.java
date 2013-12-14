@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,7 +24,6 @@ import com.parse.ParseAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseQueryAdapter;
 
 
 
@@ -211,40 +209,9 @@ public class MainActivity extends Activity {
     public void show_results(View v) {
         EditText number_text = (EditText) findViewById(R.id.textNumber);
         final long number = Long.parseLong(number_text.getText().toString());
-//        Intent mServiceIntent = new Intent(this, ShowResultsActivity.class);
-//        mServiceIntent.putExtra("prime_number", number);
-//        this.startService(mServiceIntent);
-
-        // Instantiate a QueryFactory to define the ParseQuery to be used for fetching items in this
-        // Adapter.
-        ParseQueryAdapter.QueryFactory<ParseObject> factory =
-                new ParseQueryAdapter.QueryFactory<ParseObject>() {
-                    public ParseQuery create() {
-                        ParseQuery query = new ParseQuery("Factors");
-                        query.whereEqualTo("prime_number", number);
-                        query.orderByAscending("factor");
-                        return query;
-                    }
-                };
-
-        // Pass the factory into the ParseQueryAdapter's constructor.
-        ParseQueryAdapter<ParseObject> adapter = new ParseQueryAdapter<ParseObject>(this, factory);
-        adapter.setTextKey("factor");
-
-        // Perhaps set a callback to be fired upon successful loading of a new set of ParseObjects.
-//        adapter.addOnQueryLoadListener(new OnQueryLoadListener<ParseObject>() {
-//            public void onLoading() {
-//                // Trigger any "loading" UI
-//            }
-//
-//            public void onLoaded(List<ParseObject> objects, ParseException e) {
-//                // Execute any post-loading logic, hide "loading" UI
-//            }
-//        });
-
-        // Attach it to your ListView, as in the example above
-        ListView listView = (ListView) findViewById(R.id.listview);
-        listView.setAdapter(adapter);
+        Intent mServiceIntent = new Intent(this, ShowResults.class);
+        mServiceIntent.putExtra("prime_number", number);
+        startActivity(mServiceIntent);
     }
 
     @Override
