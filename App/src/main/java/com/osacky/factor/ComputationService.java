@@ -3,14 +3,9 @@ package com.osacky.factor;
 import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
-import android.widget.ProgressBar;
-
-import com.parse.ParseObject;
-import com.parse.Parse;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 /**
  * Created by suketk on 12/13/13.

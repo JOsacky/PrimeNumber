@@ -16,7 +16,7 @@
         android:ems="10"
         android:id="@+id/textThreads"
         android:layout_gravity="center_horizontal"
-        android:hint="Number of Threads"
+        android:hint="Threads"
         android:layout_weight="1"/>
     <EditText
         android:layout_width="wrap_content"
@@ -25,7 +25,7 @@
         android:ems="10"
         android:id="@+id/textNumber"
         android:layout_gravity="center_horizontal"
-        android:hint="Number to Compute"
+        android:hint="Prime Number"
         android:layout_weight="1"/>
     </LinearLayout>
 

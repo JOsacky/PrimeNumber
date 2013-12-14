@@ -25,8 +25,6 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -87,14 +85,19 @@ public class MainActivity extends Activity {
         EditText number_text = (EditText) findViewById(R.id.textNumber);
         myVib.vibrate(50);
 
-        if(thread_text.getText().toString().length() <=0 /*|| num_threads == 0 */)
+        if(thread_text.getText().toString().length() <=0)
         {
             Toast toast = Toast.makeText(getApplicationContext(), "Please enter a number >= 0", 4);
             toast.show();
         }
-        else if(number_text.getText().toString().length() <=0 /*|| number < 2*/ )
+        else if(number_text.getText().toString().length() <=0)
         {
             Toast toast = Toast.makeText(getApplicationContext(), "Please enter a number >= 2", 4);
+            toast.show();
+        }
+        else if(number_text.getText().toString().length() >19)
+        {
+            Toast toast = Toast.makeText(getApplicationContext(), "Please enter a prime number < 100000000000000000000", 4);
             toast.show();
         }
         else
@@ -110,6 +113,16 @@ public class MainActivity extends Activity {
             else if(number <2)
             {
                 Toast toast = Toast.makeText(getApplicationContext(), "Please enter a number >= 2", 4);
+                toast.show();
+            }
+            else if(number > Long.MAX_VALUE)
+            {
+                Toast toast = Toast.makeText(getApplicationContext(), "Please enter a prime number <" + Long.MAX_VALUE, 4);
+                toast.show();
+            }
+            else if(num_threads > 50)
+            {
+                Toast toast = Toast.makeText(getApplicationContext(), "Please enter a thread number < 50", 4);
                 toast.show();
             }
             else
@@ -130,6 +143,7 @@ public class MainActivity extends Activity {
         button.setBackgroundColor(getResources().getColor(R.color.red));
         ProgressBar mProgress = (ProgressBar) findViewById(R.id.progressBar);
         mProgress.setProgress(0);
+        myVib.vibrate(50);
 
         TextView textTime = (TextView) findViewById(R.id.textTime);
         TextView textProc = (TextView) findViewById(R.id.textNumbersProcessed);
@@ -147,6 +161,13 @@ public class MainActivity extends Activity {
         catch (ParseException e)
         {
             e.printStackTrace();
+        }
+
+        if(computation ==null)
+        {
+            Toast toast = Toast.makeText(getApplicationContext(), "Nothing to compute, please create", 4);
+            toast.show();
+            button.setBackgroundColor(getResources().getColor(R.color.green));
         }
 
         if(computation!=null)
@@ -173,7 +194,6 @@ public class MainActivity extends Activity {
             mServiceIntent.putExtra(getString(R.string.parse_object_sqrt), sqrt);
             this.startService(mServiceIntent);
         }
-//        button.setBackgroundColor(getResources().getColor(R.color.green));
     }
 
     public void show_results(View v) {

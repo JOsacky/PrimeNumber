@@ -23,13 +23,9 @@
     <string name="time_broadcast">time_update</string>
 
     <color name="green">#009933</color>
-<<<<<<< HEAD
     <color name="red">#FF0000</color>
-=======
     <color name="blue">#0099CC</color>
     <color name="purple">#9933CC</color>
->>>>>>> b2fb50203a00a8448791159cab0c1bd3974b1c67
-
     <string name="title_activity_computing">Computing</string>
     <string name="title_activity_show_results">ShowResultsActivity</string>
 
