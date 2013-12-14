@@ -95,7 +95,7 @@
             android:layout_gravity="center"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/factor"
-            android:id="@+id/textNumbersProcessed"
+            android:id="@+id/textLastFactor"
             android:layout_above="@+id/textView4"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"/>

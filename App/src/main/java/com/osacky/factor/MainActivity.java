@@ -37,29 +37,37 @@ public class MainActivity extends Activity {
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            if(intent.hasExtra(getString(R.string.time_taken)))
-                setTime(intent.getLongExtra(getString(R.string.time_taken), -1));
+            if(intent.hasExtra(getString(R.string.done_broadcast)))
+                finish_up();
             else if(intent.hasExtra(getString(R.string.progress)))
-                updateProgress(intent.getLongExtra(getString(R.string.num_proc), -1));
+                updateProgress(intent.getLongExtra(getString(R.string.num_proc), -1),
+                        intent.getLongExtra(getString(R.string.time_taken), -1),
+                        intent.getLongExtra(getString(R.string.factor), -1));
         }
 
-        private void setTime(long time)
+        private void finish_up()
         {
-            TextView textTime = (TextView) findViewById(R.id.textTime);
-            textTime.setText(getString(R.string.time_taken) + " " + time);
             ProgressBar mProgress = (ProgressBar) findViewById(R.id.progressBar);
             mProgress.setProgress(100);
             Button button = (Button) findViewById(R.id.compute);
             button.setBackgroundColor(getResources().getColor(R.color.green));
         }
 
-        private void updateProgress(long num_proc)
+        private void updateProgress(long num_proc, long time, long factor)
         {
             ProgressBar mProgress = (ProgressBar) findViewById(R.id.progressBar);
             mProgress.incrementProgressBy(1);
 
             TextView textProc = (TextView) findViewById(R.id.textNumbersProcessed);
+            TextView textTime = (TextView) findViewById(R.id.textTime);
+            TextView textFactor = (TextView) findViewById(R.id.textLastFactor);
+
             textProc.setText(getString(R.string.num_proc) + " " + num_proc);
+            textTime.setText(getString(R.string.time_taken) + " " + time);
+            if(factor!=-1)
+                textFactor.setText(getString(R.string.factor) + " " + factor);
+            else
+                textFactor.setText(getString(R.string.factor) + " N/A");
         }
     }
 
