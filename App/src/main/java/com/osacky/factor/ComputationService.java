@@ -45,27 +45,28 @@ public class ComputationService extends IntentService
         long time1 = t1.getTimeInMillis();
 //        Log.e("time1", "" + time1);
 
-        ArrayList<Long> toRet = new ArrayList<Long>();
-//        ParseObject factors = new ParseObject(getString(R.string.parse_factors));
-//        factors.put(getString(R.string.parse_factors_key), number);
-
+        long last_factor = -1;
         if(low==0)
         {
             low=2;
             if(number%2==0)
             {
-                toRet.add(low);
-                toRet.add(number/2);
-                ParseObject create = new ParseObject("Factors");
-                create.put("prime_number", number);
-                create.put("factor", low);
-                create.saveInBackground();
-                ParseObject create2 = new ParseObject("Factors");
-                create2.put("prime_number", number);
-                create2.put("factor", number/2);
-                create2.saveInBackground();
-                Log.e("Factor:", "2");
-                Log.e("Factor:", ""+ (number/2));
+                if(last_factor==-1)
+                    last_factor=number/2;
+
+                ParseObject factor1 = new ParseObject(getString(R.string.parse_factors));
+                factor1.put(getString(R.string.parse_factors_key), number);
+                factor1.put(getString(R.string.parse_factors_value), low);
+
+                ParseObject factor2 = new ParseObject(getString(R.string.parse_factors));
+                factor2.put(getString(R.string.parse_factors_key), number);
+                factor2.put(getString(R.string.parse_factors_value), number / 2);
+
+                factor1.saveInBackground();
+                factor2.saveInBackground();
+
+//                Log.e("Factor:", "2");
+//                Log.e("Factor:", ""+ (number/2));
             }
         }
 
@@ -79,7 +80,7 @@ public class ComputationService extends IntentService
 
         long target = low+one_percent;
 
-        for(long i=low; i<=high; i+=2)
+        for(long i=low; i<high; i+=2)
         {
             if(i==target)
             {
@@ -95,30 +96,29 @@ public class ComputationService extends IntentService
                 broadcast_intent.putExtra(getString(R.string.progress), "");
                 broadcast_intent.putExtra(getString(R.string.num_proc), i-low);
                 broadcast_intent.putExtra(getString(R.string.time_taken), time2 - time1);
-                if(!toRet.isEmpty())
-                    broadcast_intent.putExtra(getString(R.string.factor), toRet.get(toRet.size()-1));
+                broadcast_intent.putExtra(getString(R.string.factor), last_factor);
                 sendBroadcast(broadcast_intent);
             }
 
             if(number%i == 0)
             {
+                if(last_factor==-1)
+                    last_factor=number/2;
 
-                toRet.add(i);
-                toRet.add(number / i);
-                ParseObject create = new ParseObject("Factors");
-                create.put("prime_number", number);
-                create.put("factor", i);
-                create.saveInBackground();
-                ParseObject create2 = new ParseObject("Factors");
-                create2.put("prime_number", number);
-                create2.put("factor", number/i);
-                create2.saveInBackground();
-                Log.e("Factor:", "" + i);
-                Log.e("Factor:", "" + (number/i));
+                ParseObject factor1 = new ParseObject(getString(R.string.parse_factors));
+                factor1.put(getString(R.string.parse_factors_key), number);
+                factor1.put(getString(R.string.parse_factors_value), i);
+
+                ParseObject factor2 = new ParseObject(getString(R.string.parse_factors));
+                factor2.put(getString(R.string.parse_factors_key), number);
+                factor2.put(getString(R.string.parse_factors_value), number / i);
+
+                factor1.saveInBackground();
+                factor2.saveInBackground();
+
+//                Log.e("Factor:", "" + i);
+//                Log.e("Factor:", "" + (number/i));
             }
         }
-//
-//        factors.put(getString(R.string.parse_factors_value), toRet);
-//        factors.saveInBackground();
     }
 }
