@@ -18,7 +18,6 @@
         android:layout_gravity="center_horizontal"
         android:hint="Number of Threads"
         android:layout_weight="1"/>
-
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,9 +28,9 @@
         android:hint="Number to Compute"
         android:layout_weight="1"/>
     </LinearLayout>
-
     <Button
         android:id="@+id/create"
+        android:onClick="create_computation"
         android:layout_width="200dp"
         android:layout_gravity="center"
         android:layout_height="wrap_content"
@@ -42,6 +41,7 @@
         android:text="@string/button_create" />
     <Button
         android:id="@+id/compute"
+        android:onClick="perform_computation"
         android:layout_width="200dp"
         android:layout_gravity="center"
         android:layout_height="wrap_content"
