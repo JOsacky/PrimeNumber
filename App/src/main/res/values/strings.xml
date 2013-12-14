@@ -5,7 +5,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="time_taken">Total Time: </string>
     <string name="num_proc">Numbers Processed: </string>
-    <string name="factor">First Factor Found: </string>
+    <string name="factor">Last Factor Found: </string>
     <string name="button_compute">Start Computing</string>
     <string name="button_show_results">Show Results</string>
     <string name="action_settings">Settings</string>
@@ -20,6 +20,7 @@
     <string name="parse_object_sqrt">sqrt</string>
     <string name="broadcast_action">com.osacky.factor.broadcast_action.display</string>
     <string name="progress">progress</string>
+    <string name="done_broadcast">done</string>
     <string name="time_broadcast">time_update</string>
     <string name="title_activity_computing">Computing</string>
     <string name="title_activity_show_results">ShowResultsActivity</string>

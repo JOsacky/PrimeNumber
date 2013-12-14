@@ -27,28 +27,24 @@ public class ComputationService extends IntentService
         long sqrt = workIntent.getLongExtra(getString(R.string.parse_object_sqrt), -1);
         long diff_threads = num_threads - rem_threads;
 
-        Calendar t1 = Calendar.getInstance();
-        long time1 = t1.getTimeInMillis();
-//        Log.e("time1", "" + time1);
-
         double low = (double) (diff_threads-1) / (double) num_threads;
         double high = (double) diff_threads / (double) num_threads;
 
         return_factors(number, (long) (sqrt*low), (long) (sqrt*high));
 
-        Calendar t2 = Calendar.getInstance();
-        long time2 = t2.getTimeInMillis();
-//        Log.e("time2", "" + time2);
-
         Intent broadcast_intent = new Intent();
         broadcast_intent.setAction(getString(R.string.broadcast_action));
         broadcast_intent.addCategory(Intent.CATEGORY_DEFAULT);
-        broadcast_intent.putExtra(getString(R.string.time_taken), time2 - time1);
+        broadcast_intent.putExtra(getString(R.string.done_broadcast), 0);
         sendBroadcast(broadcast_intent);
     }
 
     public void return_factors(long number, long low, long high)
     {
+        Calendar t1 = Calendar.getInstance();
+        long time1 = t1.getTimeInMillis();
+//        Log.e("time1", "" + time1);
+
         ArrayList<Long> toRet = new ArrayList<Long>();
 //        ParseObject factors = new ParseObject(getString(R.string.parse_factors));
 //        factors.put(getString(R.string.parse_factors_key), number);
@@ -63,7 +59,7 @@ public class ComputationService extends IntentService
                 ParseObject create = new ParseObject("Factors");
                 create.put("prime_number", number);
                 create.put("factor1", low);
-                create.put("factor2", number/2);
+                create.put("factor2", number / 2);
                 create.saveInBackground();
                 Log.e("Factor:", "2");
                 Log.e("Factor:", ""+ (number/2));
@@ -86,11 +82,18 @@ public class ComputationService extends IntentService
             {
                 target+=one_percent;
 
+                Calendar t2 = Calendar.getInstance();
+                long time2 = t2.getTimeInMillis();
+      //        Log.e("time2", "" + time2);
+
                 Intent broadcast_intent = new Intent();
                 broadcast_intent.setAction(getString(R.string.broadcast_action));
                 broadcast_intent.addCategory(Intent.CATEGORY_DEFAULT);
                 broadcast_intent.putExtra(getString(R.string.progress), "");
                 broadcast_intent.putExtra(getString(R.string.num_proc), i-low);
+                broadcast_intent.putExtra(getString(R.string.time_taken), time2 - time1);
+                if(!toRet.isEmpty())
+                    broadcast_intent.putExtra(getString(R.string.factor), toRet.get(toRet.size()-1));
                 sendBroadcast(broadcast_intent);
             }
 
@@ -101,7 +104,7 @@ public class ComputationService extends IntentService
                 ParseObject create = new ParseObject("Factors");
                 create.put("prime_number", number);
                 create.put("factor1", i);
-                create.put("factor2", number/i);
+                create.put("factor2", number / i);
                 create.saveInBackground();
                 Log.e("Factor:", "" + i);
                 Log.e("Factor:", "" + (number/i));
