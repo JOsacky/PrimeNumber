@@ -68,6 +68,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+//        ParseObject.registerSubclass(Factors.class);
         Parse.initialize(this, "7A5hnUGC6Zxg6OQhZjWnB2gHAYc7h2VOOxYcVlMg", "L6tf0XRvzq6xSqbmf8EkMzJxqIfMMUqP5J9pljMC");
         ParseAnalytics.trackAppOpened(getIntent());
 
@@ -177,23 +178,23 @@ public class MainActivity extends Activity {
             e.printStackTrace();
         }
 
-        ArrayList<Long> factors = new ArrayList<Long>();
-        for(ParseObject obj: objects)
-        {
-            ArrayList<Long> obj_factors = (ArrayList<Long>) obj.get(getString(R.string.parse_factors_value));
-            for(long num: obj_factors)
-            {
-                if(!factors.contains(num))
-                    factors.add(num);
-            }
-        }
-        Object[] arr = factors.toArray();
-        Arrays.sort(arr);
-        ArrayList array = new ArrayList(Arrays.asList(arr));
-
-        Intent intent = new Intent(this, ShowResultsActivity.class);
-        intent.putExtra(getString(R.string.parse_factors), array);
-        startActivity(intent);
+//        ArrayList<Long> factors = new ArrayList<Long>();
+//        for(ParseObject obj: objects)
+//        {
+//            ArrayList<Long> obj_factors = (ArrayList<Long>) obj.get(getString(R.string.parse_factors_value));
+//            for(long num: obj_factors)
+//            {
+//                if(!factors.contains(num))
+//                    factors.add(num);
+//            }
+//        }
+//        Object[] arr = factors.toArray();
+//        Arrays.sort(arr);
+//        ArrayList array = new ArrayList(Arrays.asList(arr));
+//
+//        Intent intent = new Intent(this, ShowResultsActivity.class);
+//        intent.putExtra(getString(R.string.parse_factors), array);
+//        startActivity(intent);
     }
 
     @Override

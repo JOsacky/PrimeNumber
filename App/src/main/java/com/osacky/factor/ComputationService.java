@@ -53,8 +53,8 @@ public class ComputationService extends IntentService
     public void return_factors(long number, long low, long high)
     {
         ArrayList<Long> toRet = new ArrayList<Long>();
-        ParseObject factors = new ParseObject(getString(R.string.parse_factors));
-        factors.put(getString(R.string.parse_factors_key), number);
+//        ParseObject factors = new ParseObject(getString(R.string.parse_factors));
+//        factors.put(getString(R.string.parse_factors_key), number);
 
         if(low==0)
         {
@@ -100,8 +100,8 @@ public class ComputationService extends IntentService
                 Log.e("Factor:", "" + (number/i));
             }
         }
-
-        factors.put(getString(R.string.parse_factors_value), toRet);
-        factors.saveInBackground();
+//
+//        factors.put(getString(R.string.parse_factors_value), toRet);
+//        factors.saveInBackground();
     }
 }
