@@ -4,6 +4,8 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
+import com.parse.ParseObject;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -58,6 +60,11 @@ public class ComputationService extends IntentService
             {
                 toRet.add(low);
                 toRet.add(number/2);
+                ParseObject create = new ParseObject("Factors");
+                create.put("prime_number", number);
+                create.put("factor1", low);
+                create.put("factor2", number/2);
+                create.saveInBackground();
                 Log.e("Factor:", "2");
                 Log.e("Factor:", ""+ (number/2));
             }
@@ -91,6 +98,11 @@ public class ComputationService extends IntentService
             {
                 toRet.add(i);
                 toRet.add(number / i);
+                ParseObject create = new ParseObject("Factors");
+                create.put("prime_number", number);
+                create.put("factor1", i);
+                create.put("factor2", number/i);
+                create.saveInBackground();
                 Log.e("Factor:", "" + i);
                 Log.e("Factor:", "" + (number/i));
             }
