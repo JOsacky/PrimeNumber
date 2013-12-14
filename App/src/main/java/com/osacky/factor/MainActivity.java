@@ -25,6 +25,11 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+
 
 public class MainActivity extends Activity {
 
@@ -133,7 +138,7 @@ public class MainActivity extends Activity {
         ParseQuery<ParseObject> query = ParseQuery.getQuery(getString(R.string.parse_object));
         query.whereGreaterThan(getString(R.string.parse_object_rem_threads), 0);
         ParseObject computation = null;
-        
+
         try
         {
             computation = query.getFirst();
@@ -170,6 +175,58 @@ public class MainActivity extends Activity {
 //        button.setBackgroundColor(getResources().getColor(R.color.green));
     }
 
+    public void show_results(View v) {
+        EditText number_text = (EditText) findViewById(R.id.textNumber);
+        long number = Long.parseLong(number_text.getText().toString());
+
+        ParseQuery<ParseObject> query = ParseQuery.getQuery(getString(R.string.parse_object));
+        query.whereEqualTo(getString(R.string.parse_object_rem_threads), 0);
+        query.whereEqualTo(getString(R.string.parse_object_number), number);
+        try
+        {
+            if(query.getFirst()==null)
+            {
+                Toast toast = Toast.makeText(getApplicationContext(), "No results yet.", 4);
+                toast.show();
+                return;
+            }
+        }
+        catch (ParseException e)
+        {
+            e.printStackTrace();
+        }
+
+        query = ParseQuery.getQuery(getString(R.string.parse_factors));
+        query.whereEqualTo(getString(R.string.parse_factors_key), number);
+
+        List<ParseObject> objects = null;
+        try
+        {
+            objects = query.find();
+        }
+        catch (ParseException e)
+        {
+            e.printStackTrace();
+        }
+
+        ArrayList<Long> factors = new ArrayList<Long>();
+        for(ParseObject obj: objects)
+        {
+            ArrayList<Long> obj_factors = (ArrayList<Long>) obj.get(getString(R.string.parse_factors_value));
+            for(long num: obj_factors)
+            {
+                if(!factors.contains(num))
+                    factors.add(num);
+            }
+        }
+        Object[] arr = factors.toArray();
+        Arrays.sort(arr);
+        ArrayList array = new ArrayList(Arrays.asList(arr));
+
+        Intent intent = new Intent(this, ShowResultsActivity.class);
+        intent.putExtra(getString(R.string.parse_factors), array);
+        startActivity(intent);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

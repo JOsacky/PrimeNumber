@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.ProgressBar;
 
+import com.parse.ParseObject;
+import com.parse.Parse;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -47,17 +50,19 @@ public class ComputationService extends IntentService
         sendBroadcast(broadcast_intent);
     }
 
-    public List return_factors(long number, long low, long high)
+    public void return_factors(long number, long low, long high)
     {
-        List toRet = new ArrayList();
+        ArrayList<Long> toRet = new ArrayList<Long>();
+        ParseObject factors = new ParseObject(getString(R.string.parse_factors));
+        factors.put(getString(R.string.parse_factors_key), number);
 
         if(low==0)
         {
             low=2;
             if(number%2==0)
             {
-                toRet.add(2);
-                toRet.add(number>>1);
+                toRet.add(low);
+                toRet.add(number/2);
                 Log.e("Factor:", "2");
                 Log.e("Factor:", ""+ (number/2));
             }
@@ -95,6 +100,8 @@ public class ComputationService extends IntentService
                 Log.e("Factor:", "" + (number/i));
             }
         }
-        return toRet;
+
+        factors.put(getString(R.string.parse_factors_value), toRet);
+        factors.saveInBackground();
     }
 }
