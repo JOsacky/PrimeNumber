@@ -13,6 +13,10 @@
     <string name="parse_object_number">number</string>
     <string name="parse_object_threads">threads</string>
     <string name="parse_object_rem_threads">remaining_threads</string>
+    <string name="parse_object_sqrt">sqrt</string>
+    <string name="broadcast_action">com.osacky.factor.broadcast_action.display</string>
+    <string name="progress">progress</string>
+    <string name="time_broadcast">time_update</string>
 
     <color name="green">#009933</color>
 
