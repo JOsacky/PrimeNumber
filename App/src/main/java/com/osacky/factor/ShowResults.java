@@ -29,23 +29,23 @@ public class ShowResults extends Activity {
 //                    .commit();
 //        }
         Intent i = getIntent();
-        final long prime_number = i.getLongExtra("prime_number", -1);
+        final long prime_number = i.getLongExtra(getString(R.string.parse_factors_key), -1);
         Toast toast = Toast.makeText(getApplicationContext(), ""+prime_number, 4);
         toast.show();
 
                 ParseQueryAdapter.QueryFactory<ParseObject> factory =
                 new ParseQueryAdapter.QueryFactory<ParseObject>() {
                     public ParseQuery create() {
-                        ParseQuery query = new ParseQuery("Factors");
-                        query.whereEqualTo("prime_number", prime_number);
-                        query.orderByAscending("factor");
+                        ParseQuery query = new ParseQuery(getString(R.string.parse_factors));
+                        query.whereEqualTo(getString(R.string.parse_factors_key), prime_number);
+                        query.orderByAscending(getString(R.string.parse_factors_value));
                         return query;
                     }
                 };
 
         // Pass the factory into the ParseQueryAdapter's constructor.
         ParseQueryAdapter<ParseObject> adapter = new ParseQueryAdapter<ParseObject>(this, factory);
-        adapter.setTextKey("factor");
+        adapter.setTextKey(getString(R.string.parse_factors_value));
         ListView listView = (ListView) findViewById(R.id.listNumbers);
         listView.setAdapter(adapter);
     }

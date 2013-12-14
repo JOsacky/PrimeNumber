@@ -93,17 +93,17 @@ public class MainActivity extends Activity {
 
         if(thread_text.getText().toString().length() <=0)
         {
-            Toast toast = Toast.makeText(getApplicationContext(), "Please enter a number >= 0", 4);
+            Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.thread_lower_bound), 4);
             toast.show();
         }
         else if(number_text.getText().toString().length() <=0)
         {
-            Toast toast = Toast.makeText(getApplicationContext(), "Please enter a number >= 2", 4);
+            Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.number_lower_bound), 4);
             toast.show();
         }
-        else if(number_text.getText().toString().length() >19)
+        else if(number_text.getText().toString().length() > 19)
         {
-            Toast toast = Toast.makeText(getApplicationContext(), "Please enter a prime number < 100000000000000000000", 4);
+            Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.number_upper_bound), 4);
             toast.show();
         }
         else
@@ -113,22 +113,22 @@ public class MainActivity extends Activity {
             long sqrt = (long) Math.ceil(Math.sqrt(number));
             if(num_threads==0)
             {
-                Toast toast = Toast.makeText(getApplicationContext(), "Please enter a number > 0", 4);
+                Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.thread_lower_bound), 4);
                 toast.show();
             }
-            else if(number <2)
+            else if(number < 1000000)
             {
-                Toast toast = Toast.makeText(getApplicationContext(), "Please enter a number >= 2", 4);
+                Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.number_lower_bound), 4);
                 toast.show();
             }
             else if(number > Long.MAX_VALUE)
             {
-                Toast toast = Toast.makeText(getApplicationContext(), "Please enter a prime number <" + Long.MAX_VALUE, 4);
+                Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.number_upper_bound), 4);
                 toast.show();
             }
-            else if(num_threads > 50)
+            else if(num_threads > 20)
             {
-                Toast toast = Toast.makeText(getApplicationContext(), "Please enter a thread number < 50", 4);
+                Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.thread_upper_bound), 4);
                 toast.show();
             }
             else
@@ -209,9 +209,10 @@ public class MainActivity extends Activity {
     public void show_results(View v) {
         EditText number_text = (EditText) findViewById(R.id.textNumber);
         final long number = Long.parseLong(number_text.getText().toString());
-        Intent mServiceIntent = new Intent(this, ShowResults.class);
-        mServiceIntent.putExtra("prime_number", number);
-        startActivity(mServiceIntent);
+
+        Intent show_results_intent = new Intent(this, ShowResults.class);
+        show_results_intent.putExtra(getString(R.string.parse_factors_key), number);
+        startActivity(show_results_intent);
     }
 
     @Override
