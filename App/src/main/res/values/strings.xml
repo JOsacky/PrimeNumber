@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Prime Factor</string>
+    <string name="app_name">Distributed Computing</string>
     <string name="hello_world">Hello world!</string>
     <string name="time_taken">Total Time: </string>
     <string name="num_proc">Numbers Processed: </string>

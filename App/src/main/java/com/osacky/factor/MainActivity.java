@@ -133,12 +133,21 @@ public class MainActivity extends Activity {
             }
             else
             {
-                ParseObject create = new ParseObject(getString(R.string.parse_object));
-                create.put(getString(R.string.parse_object_number), number);
-                create.put(getString(R.string.parse_object_threads), num_threads);
-                create.put(getString(R.string.parse_object_rem_threads), num_threads);
-                create.put(getString(R.string.parse_object_sqrt), sqrt);
-                create.saveInBackground();
+                ParseQuery<ParseObject> query = ParseQuery.getQuery(getString(R.string.parse_object));
+                query.whereEqualTo(getString(R.string.parse_object_rem_threads), 0);
+                query.whereEqualTo("number", number);
+                if(query == null) {
+                    ParseObject create = new ParseObject(getString(R.string.parse_object));
+                    create.put(getString(R.string.parse_object_number), number);
+                    create.put(getString(R.string.parse_object_threads), num_threads);
+                    create.put(getString(R.string.parse_object_rem_threads), num_threads);
+                    create.put(getString(R.string.parse_object_sqrt), sqrt);
+                    create.saveInBackground();
+                }
+                else {
+                    Toast toast = Toast.makeText(getApplicationContext(), "Value already computed, press show result", 4);
+                    toast.show();
+                }
             }
         }
     }
