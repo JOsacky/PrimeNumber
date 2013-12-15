@@ -136,7 +136,15 @@ public class MainActivity extends Activity {
                 ParseQuery<ParseObject> query = ParseQuery.getQuery(getString(R.string.parse_object));
                 query.whereEqualTo(getString(R.string.parse_object_rem_threads), 0);
                 query.whereEqualTo("number", number);
-                if(query == null) {
+                ParseObject computed = null;
+                try{
+                    computed = query.getFirst();
+                }
+                catch (ParseException e)
+                {
+                    e.printStackTrace();
+                }
+                if(computed == null) {
                     ParseObject create = new ParseObject(getString(R.string.parse_object));
                     create.put(getString(R.string.parse_object_number), number);
                     create.put(getString(R.string.parse_object_threads), num_threads);
