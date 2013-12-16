@@ -148,7 +148,7 @@ public class MainActivity extends Activity {
 
                 if(computed == null)
                 {
-                    Log.e("null", "should call intent");
+                    Log.e("null", "Should call intent.");
                     Intent mServiceIntent = new Intent(this, CreateService.class);
                     mServiceIntent.putExtra(getString(R.string.parse_object_number), number);
                     mServiceIntent.putExtra(getString(R.string.parse_object_threads), num_threads);
@@ -165,7 +165,6 @@ public class MainActivity extends Activity {
 
     public void perform_computation(View v)
     {
-        EditText thread_text = (EditText) findViewById(R.id.textThreads);
         EditText number_text = (EditText) findViewById(R.id.textNumber);
         Button button = (Button) findViewById(R.id.compute);
         button.setEnabled(false);
@@ -176,8 +175,10 @@ public class MainActivity extends Activity {
 
         TextView textTime = (TextView) findViewById(R.id.textTime);
         TextView textProc = (TextView) findViewById(R.id.textNumbersProcessed);
+        TextView textFactor = (TextView) findViewById(R.id.textLastFactor);
         textTime.setText(getString(R.string.time_taken));
         textProc.setText(getString(R.string.num_proc));
+        textFactor.setText(getString(R.string.factor));
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery(getString(R.string.parse_object));
         query.whereEqualTo(getString(R.string.parse_object_to_compute), true);
@@ -193,7 +194,8 @@ public class MainActivity extends Activity {
         {
             Toast toast = Toast.makeText(getApplicationContext(), "Nothing to compute, please create", 4);
             toast.show();
-            button.setBackgroundColor(getResources().getColor(R.color.green));
+            button.setEnabled(true);
+//            button.setBackgroundColor(getResources().getColor(R.color.green));
         }
         else
         {
