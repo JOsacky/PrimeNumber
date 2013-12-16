@@ -16,8 +16,13 @@
     <string name="parse_object">Computations</string>
     <string name="parse_object_number">number</string>
     <string name="parse_object_threads">threads</string>
-    <string name="parse_object_rem_threads">remaining_threads</string>
-    <string name="parse_object_sqrt">sqrt</string>
+    <string name="parse_object_thread_time">thread_time</string>
+    <!--<string name="parse_object_rem_threads">remaining_threads</string>-->
+    <!--<string name="parse_object_done_threads">completed_threads</string>-->
+    <!--<string name="parse_object_sqrt">sqrt</string>-->
+    <string name="parse_object_low">low</string>
+    <string name="parse_object_high">high</string>
+    <string name="parse_object_to_compute">to_compute</string>
     <string name="broadcast_action">com.osacky.factor.broadcast_action.display</string>
     <string name="progress">progress</string>
     <string name="done_broadcast">done</string>

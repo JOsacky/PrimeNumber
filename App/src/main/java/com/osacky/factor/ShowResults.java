@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
@@ -28,16 +30,15 @@ public class ShowResults extends Activity {
 //                    .add(R.id.container, new PlaceholderFragment())
 //                    .commit();
 //        }
-        Intent i = getIntent();
-        final long prime_number = i.getLongExtra(getString(R.string.parse_factors_key), -1);
-        Toast toast = Toast.makeText(getApplicationContext(), ""+prime_number, 4);
-        toast.show();
 
-                ParseQueryAdapter.QueryFactory<ParseObject> factory =
+        Intent intent = getIntent();
+        final long number = intent.getLongExtra(getString(R.string.parse_factors_key), -1);
+
+        ParseQueryAdapter.QueryFactory<ParseObject> factory =
                 new ParseQueryAdapter.QueryFactory<ParseObject>() {
                     public ParseQuery create() {
                         ParseQuery query = new ParseQuery(getString(R.string.parse_factors));
-                        query.whereEqualTo(getString(R.string.parse_factors_key), prime_number);
+                        query.whereEqualTo(getString(R.string.parse_factors_key), number);
                         query.orderByAscending(getString(R.string.parse_factors_value));
                         return query;
                     }
@@ -48,6 +49,7 @@ public class ShowResults extends Activity {
         adapter.setTextKey(getString(R.string.parse_factors_value));
         ListView listView = (ListView) findViewById(R.id.listNumbers);
         listView.setAdapter(adapter);
+
     }
 
 

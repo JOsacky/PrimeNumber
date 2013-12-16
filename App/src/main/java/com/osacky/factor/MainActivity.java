@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -48,7 +49,8 @@ public class MainActivity extends Activity {
             ProgressBar mProgress = (ProgressBar) findViewById(R.id.progressBar);
             mProgress.setProgress(100);
             Button button = (Button) findViewById(R.id.compute);
-            button.setBackgroundColor(getResources().getColor(R.color.green));
+            button.setEnabled(true);
+//            button.setBackgroundColor(getResources().getColor(R.color.green));
         }
 
         private void updateProgress(long num_proc, long time, long factor)
@@ -110,7 +112,7 @@ public class MainActivity extends Activity {
         {
             long num_threads = Long.parseLong(thread_text.getText().toString());
             long number = Long.parseLong(number_text.getText().toString());
-            long sqrt = (long) Math.ceil(Math.sqrt(number));
+
             if(num_threads==0)
             {
                 Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.thread_lower_bound), 4);
@@ -134,25 +136,26 @@ public class MainActivity extends Activity {
             else
             {
                 ParseQuery<ParseObject> query = ParseQuery.getQuery(getString(R.string.parse_object));
-                query.whereEqualTo(getString(R.string.parse_object_rem_threads), 0);
-                query.whereEqualTo("number", number);
+                query.whereEqualTo(getString(R.string.parse_object_number), number);
+                query.whereEqualTo(getString(R.string.parse_object_to_compute), true);
+
                 ParseObject computed = null;
-                try{
+                try {
                     computed = query.getFirst();
-                }
-                catch (ParseException e)
-                {
+                } catch (ParseException e){
                     e.printStackTrace();
                 }
-                if(computed == null) {
-                    ParseObject create = new ParseObject(getString(R.string.parse_object));
-                    create.put(getString(R.string.parse_object_number), number);
-                    create.put(getString(R.string.parse_object_threads), num_threads);
-                    create.put(getString(R.string.parse_object_rem_threads), num_threads);
-                    create.put(getString(R.string.parse_object_sqrt), sqrt);
-                    create.saveInBackground();
+
+                if(computed == null)
+                {
+                    Log.e("null", "should call intent");
+                    Intent mServiceIntent = new Intent(this, CreateService.class);
+                    mServiceIntent.putExtra(getString(R.string.parse_object_number), number);
+                    mServiceIntent.putExtra(getString(R.string.parse_object_threads), num_threads);
+                    this.startService(mServiceIntent);
                 }
-                else {
+                else
+                {
                     Toast toast = Toast.makeText(getApplicationContext(), "Value already computed, press show result", 4);
                     toast.show();
                 }
@@ -165,7 +168,8 @@ public class MainActivity extends Activity {
         EditText thread_text = (EditText) findViewById(R.id.textThreads);
         EditText number_text = (EditText) findViewById(R.id.textNumber);
         Button button = (Button) findViewById(R.id.compute);
-        button.setBackgroundColor(getResources().getColor(R.color.red));
+        button.setEnabled(false);
+//        button.setBackgroundColor(getResources().getColor(R.color.red));
         ProgressBar mProgress = (ProgressBar) findViewById(R.id.progressBar);
         mProgress.setProgress(0);
         myVib.vibrate(50);
@@ -176,56 +180,47 @@ public class MainActivity extends Activity {
         textProc.setText(getString(R.string.num_proc));
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery(getString(R.string.parse_object));
-        query.whereGreaterThan(getString(R.string.parse_object_rem_threads), 0);
-        ParseObject computation = null;
+        query.whereEqualTo(getString(R.string.parse_object_to_compute), true);
 
-        try
-        {
+        ParseObject computation = null;
+        try{
             computation = query.getFirst();
-        }
-        catch (ParseException e)
-        {
+        } catch (ParseException e){
             e.printStackTrace();
         }
 
-        if(computation ==null)
+        if(computation==null)
         {
             Toast toast = Toast.makeText(getApplicationContext(), "Nothing to compute, please create", 4);
             toast.show();
             button.setBackgroundColor(getResources().getColor(R.color.green));
         }
-
-        if(computation!=null)
+        else
         {
-            long number;
-            long num_threads;
-            long diff_threads;
-            long rem_threads;
-            long sqrt;
+            computation.put(getString(R.string.parse_object_to_compute), false);
+            try {
+                computation.save();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
-            computation.increment(getString(R.string.parse_object_rem_threads), -1);
-            computation.saveInBackground();
+            long number = computation.getLong(getString(R.string.parse_object_number));
+            long low = computation.getLong(getString(R.string.parse_object_low));
+            long high = computation.getLong(getString(R.string.parse_object_high));
 
-            number = computation.getLong(getString(R.string.parse_object_number));
-            num_threads = computation.getLong(getString(R.string.parse_object_threads));
-            rem_threads = computation.getLong(getString(R.string.parse_object_rem_threads));
-            sqrt = computation.getLong(getString(R.string.parse_object_sqrt));
-            diff_threads = num_threads - rem_threads;
-            thread_text.setText("" + num_threads);
             number_text.setText("" + number);
 
             Intent mServiceIntent = new Intent(this, ComputationService.class);
             mServiceIntent.putExtra(getString(R.string.parse_object_number), number);
-            mServiceIntent.putExtra(getString(R.string.parse_object_rem_threads), rem_threads);
-            mServiceIntent.putExtra(getString(R.string.parse_object_threads), num_threads);
-            mServiceIntent.putExtra(getString(R.string.parse_object_sqrt), sqrt);
+            mServiceIntent.putExtra(getString(R.string.parse_object_low), low);
+            mServiceIntent.putExtra(getString(R.string.parse_object_high), high);
             this.startService(mServiceIntent);
         }
     }
 
     public void show_results(View v) {
         EditText number_text = (EditText) findViewById(R.id.textNumber);
-        final long number = Long.parseLong(number_text.getText().toString());
+        long number = Long.parseLong(number_text.getText().toString());
 
         Intent show_results_intent = new Intent(this, ShowResults.class);
         show_results_intent.putExtra(getString(R.string.parse_factors_key), number);
