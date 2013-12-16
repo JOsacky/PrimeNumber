@@ -218,11 +218,35 @@ public class MainActivity extends Activity {
 
     public void show_results(View v) {
         EditText number_text = (EditText) findViewById(R.id.textNumber);
-        long number = Long.parseLong(number_text.getText().toString());
-
-        //Start activity to print list of results
-        Intent show_results_intent = new Intent(this, ShowResults.class);
-        show_results_intent.putExtra(getString(R.string.parse_factors_key), number);
-        startActivity(show_results_intent);
+        if(number_text.getText().toString().length() <=0)
+        {
+            Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.thread_lower_bound), 4);
+            toast.show();
+        }
+        else
+        {
+            ParseQuery<ParseObject> query = ParseQuery.getQuery(getString(R.string.parse_object));
+            long number = Long.parseLong(number_text.getText().toString());
+            query.whereEqualTo(getString(R.string.parse_object_number), number);
+            ParseObject results = null;
+            try {
+                results = query.getFirst();
+            }
+            catch(ParseException e) {
+                e.printStackTrace();
+            }
+            if (results != null)
+            {
+                //Start activity to print list of results
+                Intent show_results_intent = new Intent(this, ShowResults.class);
+                show_results_intent.putExtra(getString(R.string.parse_factors_key), number);
+                startActivity(show_results_intent);
+            }
+            else
+            {
+                Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.show_results_error), 4);
+                toast.show();
+            }
+        }
     }
 }
