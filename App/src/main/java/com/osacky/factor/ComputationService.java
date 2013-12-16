@@ -23,12 +23,16 @@ public class ComputationService extends IntentService
 
     @Override
     protected void onHandleIntent(Intent workIntent) {
+
+        //Extract relevant information from intent
         long number = workIntent.getLongExtra(getString(R.string.parse_object_number), -1);
         long low = workIntent.getLongExtra(getString(R.string.parse_object_low), -1);
         long high = workIntent.getLongExtra(getString(R.string.parse_object_high), -1);
 
+        //Call MAP function - in this case is factorization
         return_factors(number, low, high);
 
+        //Create done broadcast to update UI
         Intent broadcast_intent = new Intent();
         broadcast_intent.setAction(getString(R.string.broadcast_action));
         broadcast_intent.addCategory(Intent.CATEGORY_DEFAULT);
@@ -38,6 +42,7 @@ public class ComputationService extends IntentService
 
     public void return_factors(long number, long low, long high)
     {
+        //Start time
         Calendar t1 = Calendar.getInstance();
         long time1 = t1.getTimeInMillis();
 
@@ -45,10 +50,11 @@ public class ComputationService extends IntentService
 
         long last_factor = -1;
         if(low==0)
-            low=1;
+            low=1; //Can't divide by 0
 
         for(long i=low; i<high; i++)
         {
+            //If one percent of computation is complete, update UI
             if(i%one_percent==0)
             {
                 Calendar t2 = Calendar.getInstance();
@@ -64,6 +70,7 @@ public class ComputationService extends IntentService
                 sendBroadcast(broadcast_intent);
             }
 
+            //If divisible, save to the database with key as number and value as divisor
             if(number%i == 0)
             {
                 last_factor=i;
@@ -81,12 +88,13 @@ public class ComputationService extends IntentService
             }
         }
 
+        //End time
         Calendar t2 = Calendar.getInstance();
         long time2 = t2.getTimeInMillis();
 
+        //Get relevant object to update thread time
         ParseQuery<ParseObject> query = ParseQuery.getQuery(getString(R.string.parse_object));
         query.whereEqualTo(getString(R.string.parse_object_number), number);
-//        query.whereEqualTo(getString(R.string.parse_object_low), low);
         query.whereEqualTo(getString(R.string.parse_object_high), high);
 
         ParseObject computed = null;
