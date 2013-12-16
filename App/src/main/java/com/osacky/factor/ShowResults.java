@@ -4,16 +4,13 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
@@ -25,15 +22,10 @@ public class ShowResults extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_results);
 
-//        if (savedInstanceState == null) {
-//            getFragmentManager().beginTransaction()
-//                    .add(R.id.container, new PlaceholderFragment())
-//                    .commit();
-//        }
-
         Intent intent = getIntent();
         final long number = intent.getLongExtra(getString(R.string.parse_factors_key), -1);
 
+        //query our database to find factors of number
         ParseQueryAdapter.QueryFactory<ParseObject> factory =
                 new ParseQueryAdapter.QueryFactory<ParseObject>() {
                     public ParseQuery create() {
@@ -48,6 +40,7 @@ public class ShowResults extends Activity {
         ParseQueryAdapter<ParseObject> adapter = new ParseQueryAdapter<ParseObject>(this, factory);
         adapter.setTextKey(getString(R.string.parse_factors_value));
         ListView listView = (ListView) findViewById(R.id.listNumbers);
+        //populate listview with factors from the adapter
         listView.setAdapter(adapter);
 
     }

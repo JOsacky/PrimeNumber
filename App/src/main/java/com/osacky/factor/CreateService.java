@@ -2,7 +2,6 @@ package com.osacky.factor;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.util.Log;
 
 import com.parse.ParseObject;
 
@@ -21,15 +20,10 @@ public class CreateService extends IntentService
     protected void onHandleIntent(Intent intent) {
         long number = intent.getLongExtra(getString(R.string.parse_object_number), -1);
         long num_threads = intent.getLongExtra(getString(R.string.parse_object_threads), -1);
-
-//        Log.e("HI", "HI_1");
-
         long sqrt = (long) Math.ceil(Math.sqrt(number));
 
+        //puts number, low, high, to_compute in our database for each thread
         for (int i = 0; i < num_threads; i++) {
-
-//            Log.e("HI", "HI");
-
             double low = (double) (i) / (double) num_threads;
             double high = (double) (i+1) / (double) num_threads;
 
