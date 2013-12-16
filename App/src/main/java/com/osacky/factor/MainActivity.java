@@ -101,7 +101,7 @@ public class MainActivity extends Activity {
             Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.number_lower_bound), 4);
             toast.show();
         }
-        else if(number_text.getText().toString().length() > 19){
+        else if(number_text.getText().toString().length() > 15){
             Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.number_upper_bound), 4);
             toast.show();
         }
@@ -118,7 +118,7 @@ public class MainActivity extends Activity {
                 Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.number_lower_bound), 4);
                 toast.show();
             }
-            else if(number > Long.MAX_VALUE){
+            else if(number > 999999999999999L){
                 Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.number_upper_bound), 4);
                 toast.show();
             }
@@ -220,7 +220,7 @@ public class MainActivity extends Activity {
         EditText number_text = (EditText) findViewById(R.id.textNumber);
         if(number_text.getText().toString().length() <=0)
         {
-            Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.thread_lower_bound), 4);
+            Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.number_lower_bound), 4);
             toast.show();
         }
         else

@@ -30,7 +30,7 @@
     <string name="title_activity_computing">Computing</string>
     <string name="title_activity_show_results">ShowResultsActivity</string>
     <string name="thread_lower_bound">Please enter a thread number > 0</string>
-    <string name="thread_upper_bound">Please enter a thread number &lt; 20</string>
+    <string name="thread_upper_bound">Please enter a thread number &lt; 16</string>
     <string name="number_lower_bound">Please enter a number >= 1000000</string>
     <string name="number_upper_bound">Please enter a number &lt; 2^63-1</string>
     <string name="show_results_error">This number has not been computed</string>
