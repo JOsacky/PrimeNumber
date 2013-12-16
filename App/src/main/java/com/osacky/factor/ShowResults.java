@@ -25,7 +25,7 @@ public class ShowResults extends Activity {
         Intent intent = getIntent();
         final long number = intent.getLongExtra(getString(R.string.parse_factors_key), -1);
 
-        //query our database to find factors of number
+        //Query our database to find factors of the number
         ParseQueryAdapter.QueryFactory<ParseObject> factory =
                 new ParseQueryAdapter.QueryFactory<ParseObject>() {
                     public ParseQuery create() {
@@ -36,11 +36,12 @@ public class ShowResults extends Activity {
                     }
                 };
 
-        // Pass the factory into the ParseQueryAdapter's constructor.
+        //Pass the factory into the ParseQueryAdapter's constructor.
         ParseQueryAdapter<ParseObject> adapter = new ParseQueryAdapter<ParseObject>(this, factory);
         adapter.setTextKey(getString(R.string.parse_factors_value));
         ListView listView = (ListView) findViewById(R.id.listNumbers);
-        //populate listview with factors from the adapter
+
+        //Populate the ListView with factors from the adapter
         listView.setAdapter(adapter);
 
     }

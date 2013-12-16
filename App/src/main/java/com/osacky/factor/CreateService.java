@@ -22,8 +22,10 @@ public class CreateService extends IntentService
         long num_threads = intent.getLongExtra(getString(R.string.parse_object_threads), -1);
         long sqrt = (long) Math.ceil(Math.sqrt(number));
 
-        //puts number, low, high, to_compute in our database for each thread
+        //Puts number, low, high, and to_compute in our database for each thread
         for (int i = 0; i < num_threads; i++) {
+
+            //If there are n threads, each thread should compute sqrt(number)/n numbers
             double low = (double) (i) / (double) num_threads;
             double high = (double) (i+1) / (double) num_threads;
 
